@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Layanan Publik | TVRI</title>
+<style>
+  :root{
+    --tvri-blue:#0c5da5;
+    --tvri-dark:#093b68;
+    --tvri-light:#eaf4ff;
+    --text:#203246;
+    --muted:#718096;
+    --line:#e3edf6;
+    --white:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family:Arial,Helvetica,sans-serif;
+    color:var(--text);
+    background:linear-gradient(180deg,#f8fbff 0%,#eef5fb 100%);
+  }
+  .page{max-width:1180px;margin:0 auto;padding:26px 20px 48px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px}
+  .brand{display:flex;align-items:center;gap:13px}
+  .logo{
+    width:54px;height:54px;border-radius:50%;display:grid;place-items:center;
+    background:var(--tvri-blue);color:#fff;font-size:15px;font-weight:800;
+    box-shadow:0 8px 22px rgba(12,93,165,.25)
+  }
+  .brand h1{margin:0;font-size:19px;letter-spacing:.2px}
+  .brand p{margin:4px 0 0;color:var(--muted);font-size:12px}
+  .tag{font-size:12px;color:var(--tvri-blue);background:#fff;border:1px solid var(--line);padding:9px 12px;border-radius:999px}
+
+  .hero{
+    background:linear-gradient(135deg,var(--tvri-dark),var(--tvri-blue));
+    border-radius:26px;padding:32px;color:white;margin-bottom:26px;
+    box-shadow:0 18px 45px rgba(24,75,117,.18)
+  }
+  .hero small{opacity:.8;text-transform:uppercase;letter-spacing:1.5px;font-weight:700}
+  .hero h2{font-size:32px;margin:8px 0 8px}
+  .hero p{margin:0;max-width:720px;line-height:1.65;opacity:.92;font-size:14px}
+  .search-wrap{margin-top:22px;position:relative;max-width:560px}
+  .search-wrap input{
+    width:100%;border:0;outline:0;border-radius:15px;padding:15px 18px 15px 45px;
+    font-size:14px;box-shadow:0 8px 22px rgba(0,0,0,.10)
+  }
+  .search-wrap:before{content:'⌕';position:absolute;left:17px;top:9px;color:#6d8094;font-size:25px;z-index:2}
+
+  .heading{display:flex;align-items:center;justify-content:space-between;margin:0 2px 14px}
+  .heading h3{margin:0;font-size:20px}
+  .heading span{font-size:12px;color:var(--muted)}
+
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+  .card{
+    position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;
+    min-height:150px;cursor:pointer;transition:.2s ease;overflow:hidden;
+    box-shadow:0 6px 18px rgba(31,67,101,.05)
+  }
+  .card:hover{transform:translateY(-4px);border-color:#bdd8ef;box-shadow:0 14px 30px rgba(31,67,101,.11)}
+  .card .icon{width:45px;height:45px;border-radius:13px;background:var(--tvri-light);display:grid;place-items:center;font-size:22px;margin-bottom:15px}
+  .card h4{font-size:15px;margin:0 25px 7px 0}
+  .card p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}
+  .card .arrow{position:absolute;right:17px;top:19px;color:var(--tvri-blue);font-size:22px;font-weight:bold}
+
+  .overlay{position:fixed;inset:0;background:rgba(4,35,63,.52);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:20px;z-index:99}
+  .overlay.active{display:flex}
+  .modal{width:min(650px,100%);max-height:86vh;overflow:auto;background:#fff;border-radius:24px;box-shadow:0 28px 80px rgba(0,0,0,.25)}
+  .modal-head{padding:23px 24px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .modal-title small{display:block;color:var(--tvri-blue);font-size:11px;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:5px}
+  .modal-title h3{margin:0;font-size:22px}
+  .close{width:37px;height:37px;border:0;border-radius:50%;background:#eef4f8;color:#456;cursor:pointer;font-size:20px}
+  .services{padding:16px 20px 22px}
+  .service{
+    display:flex;align-items:center;gap:14px;padding:14px 15px;border:1px solid var(--line);border-radius:15px;
+    margin:9px 0;text-decoration:none;color:var(--text);transition:.15s;background:#fff
+  }
+  .service:hover{background:var(--tvri-light);border-color:#c5def2}
+  .service-icon{width:40px;height:40px;border-radius:11px;background:#edf5fc;display:grid;place-items:center;flex:none}
+  .service-info{flex:1}
+  .service strong{font-size:14px;display:block}
+  .service small{color:var(--muted);font-size:11px;margin-top:3px;display:block}
+  .go{color:var(--tvri-blue);font-size:20px}
+  .empty{background:#f7fafc;border:1px dashed #cbd9e5;color:var(--muted);border-radius:14px;padding:24px;text-align:center;font-size:13px;line-height:1.6}
+
+  footer{text-align:center;color:#8b9aaa;font-size:12px;padding-top:32px}
+  .hidden{display:none!important}
+
+  @media(max-width:900px){.grid{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:650px){
+    .page{padding:18px 14px 35px}.topbar{margin-bottom:19px}.tag{display:none}
+    .hero{padding:25px 20px;border-radius:21px}.hero h2{font-size:25px}
+    .grid{grid-template-columns:repeat(2,1fr);gap:11px}.card{min-height:145px;padding:15px}
+    .card .arrow{right:13px;top:16px}.card h4{font-size:14px}.modal-head{padding:20px}.services{padding:12px 15px 18px}
+  }
+  @media(max-width:380px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">TVRI</div>
+      <div>
+        <h1>Layanan Publik</h1>
+        <p>Portal layanan pemerintah dalam satu tampilan</p>
+      </div>
+    </div>
+    <div class="tag">IT LPP TVRI</div>
+  </header>
+
+  <section class="hero">
+    <small>Portal Informasi Digital</small>
+    <h2>LAYANAN PUBLIK</h2>
+    <p>Pilih sektor layanan publik untuk melihat instansi terkait. Tampilan ini dapat digunakan sebagai halaman tujuan dari QR Code yang ditayangkan pada layar TVRI.</p>
+    <div class="search-wrap"><input id="search" type="search" placeholder="Cari keamanan, POLRI, kesehatan, DJP..." /></div>
+  </section>
+
+  <div class="heading">
+    <h3>Kategori Layanan</h3>
+    <span id="counter"></span>
+  </div>
+  <section class="grid" id="grid"></section>
+
+  <footer>Copyright © IT LPP TVRI 2026</footer>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title"><small>Submenu Layanan</small><h3 id="modalTitle"></h3></div>
+      <button class="close" id="closeBtn">×</button>
+    </div>
+    <div class="services" id="services"></div>
+  </div>
+</div>
+
+<script>
+const categories = [
+  {name:'Keamanan',icon:'🛡️',desc:'Keamanan masyarakat dan pertahanan negara.',items:[
+    ['POLRI','Kepolisian Negara Republik Indonesia','https://polri.go.id/'],
+    ['TNI','Tentara Nasional Indonesia','https://tni.mil.id/']
+  ]},
+  {name:'Kependudukan',icon:'🪪',desc:'Administrasi kependudukan dan keimigrasian.',items:[
+    ['Disdukcapil','Layanan administrasi kependudukan','https://dukcapil.kemendagri.go.id/'],
+    ['Imigrasi','Direktorat Jenderal Imigrasi','https://www.imigrasi.go.id/']
+  ]},
+  {name:'Kesehatan',icon:'🏥',desc:'Informasi dan layanan kesehatan nasional.',items:[
+    ['Kementerian Kesehatan RI','Kementerian Kesehatan Republik Indonesia','https://www.kemkes.go.id/']
+  ]},
+  {name:'Keuangan',icon:'💳',desc:'Keuangan negara, bank sentral, audit dan pajak.',items:[
+    ['Bank Indonesia','Bank sentral Republik Indonesia','https://www.bi.go.id/'],
+    ['Badan Pemeriksa Keuangan','BPK Republik Indonesia','https://www.bpk.go.id/'],
+    ['Kementerian Keuangan','Kementerian Keuangan Republik Indonesia','https://www.kemenkeu.go.id/'],
+    ['DJP','Direktorat Jenderal Pajak','https://www.pajak.go.id/']
+  ]},
+  {name:'Kebencanaan',icon:'🚨',desc:'Darurat, penyelamatan dan layanan infrastruktur.',items:[
+    ['Basarnas','Badan Nasional Pencarian dan Pertolongan','https://www.basarnas.go.id/'],
+    ['Damkar','Layanan pemadam kebakaran daerah','#'],
+    ['PAM JAYA','Layanan air minum Jakarta','https://www.pamjaya.co.id/'],
+    ['PLN','Perusahaan Listrik Negara','https://web.pln.co.id/']
+  ]},
+  {name:'Pendidikan',icon:'🎓',desc:'Informasi dan layanan pendidikan nasional.',items:[
+    ['Kemendikbud','Portal kementerian bidang pendidikan','https://www.kemdikbud.go.id/']
+  ]},
+  {name:'Penyiaran',icon:'📺',desc:'Informasi dan layanan sektor penyiaran.',items:[]},
+  {name:'Perdagangan',icon:'🛒',desc:'Informasi dan layanan bidang perdagangan.',items:[]},
+  {name:'Politik dan Keamanan Negara',icon:'🏛️',desc:'Informasi politik dan keamanan negara.',items:[]},
+  {name:'Sosial',icon:'🤝',desc:'Informasi dan layanan sosial masyarakat.',items:[]},
+  {name:'Statistik',icon:'📊',desc:'Data statistik dan informasi nasional.',items:[]}
+];
+
+const grid = document.getElementById('grid');
+const counter = document.getElementById('counter');
+const overlay = document.getElementById('overlay');
+const services = document.getElementById('services');
+const modalTitle = document.getElementById('modalTitle');
+
+function render(data){
+  grid.innerHTML='';
+  counter.textContent = data.length + ' kategori';
+  data.forEach(cat=>{
+    const card=document.createElement('article');
+    card.className='card';
+    card.innerHTML=`<div class="arrow">›</div><div class="icon">${cat.icon}</div><h4>${cat.name}</h4><p>${cat.desc}</p>`;
+    card.addEventListener('click',()=>openCategory(cat));
+    grid.appendChild(card);
+  });
+}
+
+function openCategory(cat){
+  modalTitle.textContent=cat.name;
+  if(cat.items.length===0){
+    services.innerHTML='<div class="empty"><b>Submenu belum ditambahkan.</b><br>Bagian ini sudah disiapkan sehingga instansi baru dapat dimasukkan dengan mudah pada data kategori di file HTML.</div>';
+  } else {
+    services.innerHTML=cat.items.map(item=>`
+      <a class="service" href="${item[2]}" ${item[2]==='#'?'onclick="return false"':'target="_blank" rel="noopener"'}>
+        <div class="service-icon">↗</div>
+        <div class="service-info"><strong>${item[0]}</strong><small>${item[1]}</small></div>
+        <div class="go">›</div>
+      </a>`).join('');
+  }
+  overlay.classList.add('active');
+}
+function closeModal(){overlay.classList.remove('active')}
+document.getElementById('closeBtn').addEventListener('click',closeModal);
+overlay.addEventListener('click',e=>{if(e.target===overlay)closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+document.getElementById('search').addEventListener('input',e=>{
+  const q=e.target.value.toLowerCase().trim();
+  if(!q){render(categories);return}
+  render(categories.filter(cat=>
+    cat.name.toLowerCase().includes(q) ||
+    cat.desc.toLowerCase().includes(q) ||
+    cat.items.some(item=>item[0].toLowerCase().includes(q) || item[1].toLowerCase().includes(q))
+  ));
+});
+render(categories);
+</script>
+</body>
+</html>
