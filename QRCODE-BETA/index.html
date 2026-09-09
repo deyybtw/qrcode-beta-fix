@@ -115,11 +115,11 @@
     <small>Portal Informasi Digital</small>
     <h2>LAYANAN PUBLIK</h2>
     <p>Pilih sektor layanan publik untuk melihat instansi terkait. Tampilan ini dapat digunakan sebagai halaman tujuan dari QR Code yang ditayangkan pada layar TVRI.</p>
-    <div class="search-wrap"><input id="search" type="search" placeholder="Cari keamanan, POLRI, kesehatan, DJP..." /></div>
+    <div class="search-wrap"><input id="search" type="search" placeholder="Cari kementerian, lembaga, keamanan, kesehatan, pendidikan..." /></div>
   </section>
 
   <div class="heading">
-    <h3>Kategori Layanan</h3>
+    <h3>Kategori Layanan Pemerintahan</h3>
     <span id="counter"></span>
   </div>
   <section class="grid" id="grid"></section>
@@ -139,49 +139,779 @@
 
 <script>
 const categories = [
-  {name:'Badan Pangan Nasional',icon:'🌾',desc:'Portal pemerintah terkait pangan, pertanian, harga, distribusi dan keamanan pangan.',items:[
-    ['Badan Pangan Nasional','Portal resmi Badan Pangan Nasional','https://badanpangan.go.id/'],
-    ['Open Data Pangan','Data pangan nasional, harga, konsumsi dan ketersediaan','https://data.badanpangan.go.id/'],
-    ['SiPangan','Sistem informasi pangan terintegrasi','https://layanan-sipangan.badanpangan.go.id/'],
-    ['Kementerian Pertanian RI','Informasi pertanian dan produksi pangan nasional','https://www.pertanian.go.id/'],
-    ['Kementerian Kelautan dan Perikanan','Informasi sektor kelautan, perikanan dan pangan hasil laut','https://kkp.go.id/'],
-    ['BPOM','Pengawasan keamanan dan registrasi pangan olahan','https://www.pom.go.id/'],
-    ['Perum BULOG','Logistik, stok dan distribusi pangan nasional','https://www.bulog.co.id/'],
-    ['PIHPS Nasional','Pusat Informasi Harga Pangan Strategis Nasional - Bank Indonesia','https://www.bi.go.id/hargapangan/Website']
-  ]},
-  {name:'Keamanan',icon:'🛡️',desc:'Keamanan masyarakat dan pertahanan negara.',items:[
-    ['POLRI','Kepolisian Negara Republik Indonesia','https://polri.go.id/'],
-    ['TNI','Tentara Nasional Indonesia','https://tni.mil.id/']
-  ]},
-  {name:'Kependudukan',icon:'🪪',desc:'Administrasi kependudukan dan keimigrasian.',items:[
-    ['Disdukcapil','Layanan administrasi kependudukan','https://dukcapil.kemendagri.go.id/'],
-    ['Imigrasi','Direktorat Jenderal Imigrasi','https://www.imigrasi.go.id/']
-  ]},
-  {name:'Kesehatan',icon:'🏥',desc:'Informasi dan layanan kesehatan nasional.',items:[
-    ['Kementerian Kesehatan RI','Kementerian Kesehatan Republik Indonesia','https://www.kemkes.go.id/']
-  ]},
-  {name:'Keuangan',icon:'💳',desc:'Keuangan negara, bank sentral, audit dan pajak.',items:[
-    ['Bank Indonesia','Bank sentral Republik Indonesia','https://www.bi.go.id/'],
-    ['Badan Pemeriksa Keuangan','BPK Republik Indonesia','https://www.bpk.go.id/'],
-    ['Kementerian Keuangan','Kementerian Keuangan Republik Indonesia','https://www.kemenkeu.go.id/'],
-    ['DJP','Direktorat Jenderal Pajak','https://www.pajak.go.id/']
-  ]},
-  {name:'Kebencanaan',icon:'🚨',desc:'Darurat, penyelamatan dan layanan infrastruktur.',items:[
-    ['Basarnas','Badan Nasional Pencarian dan Pertolongan','https://www.basarnas.go.id/'],
-    ['Damkar','Layanan pemadam kebakaran daerah','#'],
-    ['PAM JAYA','Layanan air minum Jakarta','https://www.pamjaya.co.id/'],
-    ['PLN','Perusahaan Listrik Negara','https://web.pln.co.id/']
-  ]},
-  {name:'Pendidikan',icon:'🎓',desc:'Informasi dan layanan pendidikan nasional.',items:[
-    ['Kemendikbud','Portal kementerian bidang pendidikan','https://www.kemdikbud.go.id/']
-  ]},
-  {name:'Penyiaran',icon:'📺',desc:'Informasi dan layanan sektor penyiaran.',items:[]},
-  {name:'Perdagangan',icon:'🛒',desc:'Informasi dan layanan bidang perdagangan.',items:[]},
-  {name:'Politik dan Keamanan Negara',icon:'🏛️',desc:'Informasi politik dan keamanan negara.',items:[
-    ['Kementerian Koordinator Bidang Politik dan Keamanan RI','Kemenko Polkam Republik Indonesia','https://polkam.go.id/']
-  ]},
-  {name:'Sosial',icon:'🤝',desc:'Informasi dan layanan sosial masyarakat.',items:[]},
-  {name:'Statistik',icon:'📊',desc:'Data statistik dan informasi nasional.',items:[]}
+  {
+    "name": "Badan Pangan Nasional",
+    "icon": "🌾",
+    "desc": "Portal pemerintah terkait pangan, gizi, pertanian, harga, distribusi dan keamanan pangan.",
+    "items": [
+      [
+        "Kementerian Koordinator Bidang Pangan",
+        "Koordinasi kebijakan pangan nasional",
+        "https://www.kemenkopangan.go.id/"
+      ],
+      [
+        "Badan Pangan Nasional",
+        "Portal resmi Badan Pangan Nasional",
+        "https://badanpangan.go.id/"
+      ],
+      [
+        "BGN — Badan Gizi Nasional",
+        "Portal resmi Badan Gizi Nasional",
+        "https://www.bgn.go.id/"
+      ],
+      [
+        "MBG — Makan Bergizi Gratis",
+        "Informasi Program Makan Bergizi Gratis",
+        "https://www.bgn.go.id/juknis"
+      ],
+      [
+        "Open Data Pangan",
+        "Data pangan nasional, harga, konsumsi dan ketersediaan",
+        "https://data.badanpangan.go.id/"
+      ],
+      [
+        "SiPangan",
+        "Sistem informasi pangan terintegrasi",
+        "https://layanan-sipangan.badanpangan.go.id/"
+      ],
+      [
+        "Kementerian Pertanian RI",
+        "Informasi pertanian dan produksi pangan nasional",
+        "https://www.pertanian.go.id/"
+      ],
+      [
+        "Kementerian Kelautan dan Perikanan",
+        "Informasi kelautan, perikanan dan pangan hasil laut",
+        "https://kkp.go.id/"
+      ],
+      [
+        "BPOM",
+        "Pengawasan keamanan dan registrasi pangan olahan",
+        "https://www.pom.go.id/"
+      ],
+      [
+        "Perum BULOG",
+        "Logistik, stok dan distribusi pangan nasional",
+        "https://www.bulog.co.id/"
+      ],
+      [
+        "PIHPS Nasional",
+        "Pusat Informasi Harga Pangan Strategis Nasional - Bank Indonesia",
+        "https://www.bi.go.id/hargapangan/Website"
+      ]
+    ]
+  },
+  {
+    "name": "Keamanan",
+    "icon": "🛡️",
+    "desc": "Keamanan masyarakat, pertahanan, intelijen dan keamanan siber negara.",
+    "items": [
+      [
+        "Kementerian Pertahanan RI",
+        "Kebijakan dan informasi pertahanan negara",
+        "https://www.kemhan.go.id/"
+      ],
+      [
+        "POLRI",
+        "Kepolisian Negara Republik Indonesia",
+        "https://polri.go.id/"
+      ],
+      [
+        "TNI",
+        "Tentara Nasional Indonesia",
+        "https://tni.mil.id/"
+      ],
+      [
+        "BIN",
+        "Badan Intelijen Negara",
+        "https://www.bin.go.id/"
+      ],
+      [
+        "BSSN",
+        "Badan Siber dan Sandi Negara",
+        "https://www.bssn.go.id/"
+      ],
+      [
+        "BNPT",
+        "Badan Nasional Penanggulangan Terorisme",
+        "https://www.bnpt.go.id/"
+      ],
+      [
+        "BNN",
+        "Badan Narkotika Nasional",
+        "https://bnn.go.id/"
+      ],
+      [
+        "Bakamla RI",
+        "Badan Keamanan Laut Republik Indonesia",
+        "https://bakamla.go.id/"
+      ],
+      [
+        "Lemhannas RI",
+        "Lembaga Ketahanan Nasional Republik Indonesia",
+        "https://lemhannas.go.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Kependudukan",
+    "icon": "🪪",
+    "desc": "Administrasi kependudukan, keluarga, keimigrasian dan layanan warga negara.",
+    "items": [
+      [
+        "Ditjen Dukcapil Kemendagri",
+        "Administrasi kependudukan dan pencatatan sipil",
+        "https://dukcapil.kemendagri.go.id/"
+      ],
+      [
+        "Kemendukbangga/BKKBN",
+        "Kementerian Kependudukan dan Pembangunan Keluarga/BKKBN",
+        "https://www.kemendukbangga.go.id/"
+      ],
+      [
+        "Direktorat Jenderal Imigrasi",
+        "Layanan paspor, visa dan keimigrasian",
+        "https://www.imigrasi.go.id/"
+      ],
+      [
+        "Kementerian Imigrasi dan Pemasyarakatan",
+        "Portal resmi Kemenimipas RI",
+        "https://kemenimipas.go.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Kesehatan",
+    "icon": "🏥",
+    "desc": "Informasi kesehatan, jaminan kesehatan, obat, pangan dan gizi nasional.",
+    "items": [
+      [
+        "Kementerian Kesehatan RI",
+        "Portal Kementerian Kesehatan Republik Indonesia",
+        "https://www.kemkes.go.id/"
+      ],
+      [
+        "BPJS Kesehatan",
+        "Jaminan Kesehatan Nasional",
+        "https://www.bpjs-kesehatan.go.id/"
+      ],
+      [
+        "BPOM",
+        "Pengawasan obat dan makanan",
+        "https://www.pom.go.id/"
+      ],
+      [
+        "Badan Gizi Nasional",
+        "Program dan kebijakan pemenuhan gizi nasional",
+        "https://www.bgn.go.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Keuangan",
+    "icon": "💳",
+    "desc": "Keuangan negara, perbankan, audit, pajak, pengawasan dan stabilitas sistem keuangan.",
+    "items": [
+      [
+        "Kementerian Keuangan RI",
+        "Portal Kementerian Keuangan Republik Indonesia",
+        "https://www.kemenkeu.go.id/"
+      ],
+      [
+        "Bank Indonesia",
+        "Bank sentral Republik Indonesia",
+        "https://www.bi.go.id/"
+      ],
+      [
+        "Otoritas Jasa Keuangan",
+        "Pengaturan dan pengawasan sektor jasa keuangan",
+        "https://www.ojk.go.id/"
+      ],
+      [
+        "Lembaga Penjamin Simpanan",
+        "Penjaminan simpanan dan resolusi bank",
+        "https://www.lps.go.id/"
+      ],
+      [
+        "Badan Pemeriksa Keuangan",
+        "BPK Republik Indonesia",
+        "https://www.bpk.go.id/"
+      ],
+      [
+        "BPKP",
+        "Badan Pengawasan Keuangan dan Pembangunan",
+        "https://www.bpkp.go.id/"
+      ],
+      [
+        "DJP",
+        "Direktorat Jenderal Pajak",
+        "https://www.pajak.go.id/"
+      ],
+      [
+        "Direktorat Jenderal Bea dan Cukai",
+        "Layanan kepabeanan dan cukai",
+        "https://www.beacukai.go.id/"
+      ],
+      [
+        "PPATK",
+        "Pusat Pelaporan dan Analisis Transaksi Keuangan",
+        "https://www.ppatk.go.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Kebencanaan",
+    "icon": "🚨",
+    "desc": "Mitigasi bencana, cuaca, geologi, penyelamatan dan layanan darurat.",
+    "items": [
+      [
+        "BNPB",
+        "Badan Nasional Penanggulangan Bencana",
+        "https://www.bnpb.go.id/"
+      ],
+      [
+        "BMKG",
+        "Badan Meteorologi, Klimatologi, dan Geofisika",
+        "https://www.bmkg.go.id/"
+      ],
+      [
+        "Basarnas",
+        "Badan Nasional Pencarian dan Pertolongan",
+        "https://www.basarnas.go.id/"
+      ],
+      [
+        "MAGMA Indonesia / PVMBG",
+        "Informasi aktivitas gunung api dan gerakan tanah",
+        "https://magma.esdm.go.id/"
+      ],
+      [
+        "Damkar",
+        "Layanan pemadam kebakaran berada pada pemerintah daerah; portal Kemendagri sebagai rujukan nasional",
+        "https://www.kemendagri.go.id/"
+      ],
+      [
+        "PAM JAYA",
+        "Layanan air minum Jakarta",
+        "https://www.pamjaya.co.id/"
+      ],
+      [
+        "PLN",
+        "Perusahaan Listrik Negara",
+        "https://web.pln.co.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Pendidikan, Riset & Kebudayaan",
+    "icon": "🎓",
+    "desc": "Pendidikan dasar, pendidikan tinggi, riset, inovasi, budaya dan perpustakaan.",
+    "items": [
+      [
+        "Kementerian Pendidikan Dasar dan Menengah",
+        "Portal resmi Kemendikdasmen",
+        "https://www.kemendikdasmen.go.id/"
+      ],
+      [
+        "Kementerian Pendidikan Tinggi, Sains, dan Teknologi",
+        "Portal resmi Kemdiktisaintek",
+        "https://www.kemdiktisaintek.go.id/"
+      ],
+      [
+        "Kementerian Kebudayaan RI",
+        "Portal resmi Kementerian Kebudayaan",
+        "https://kemenbud.go.id/"
+      ],
+      [
+        "BRIN",
+        "Badan Riset dan Inovasi Nasional",
+        "https://www.brin.go.id/"
+      ],
+      [
+        "Perpustakaan Nasional RI",
+        "Layanan perpustakaan dan literasi nasional",
+        "https://www.perpusnas.go.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Penyiaran & Digital",
+    "icon": "📺",
+    "desc": "Penyiaran publik, komunikasi, layanan digital dan informasi masyarakat.",
+    "items": [
+      [
+        "Kementerian Komunikasi dan Digital RI",
+        "Portal resmi Kementerian Komunikasi dan Digital",
+        "https://www.komdigi.go.id/"
+      ],
+      [
+        "Komisi Penyiaran Indonesia",
+        "Regulasi, pengawasan dan pengaduan penyiaran",
+        "https://kpi.go.id/"
+      ],
+      [
+        "E-Penyiaran Komdigi",
+        "Layanan perizinan dan informasi penyelenggaraan penyiaran",
+        "https://e-penyiaran.komdigi.go.id/"
+      ],
+      [
+        "LPP TVRI",
+        "Televisi Republik Indonesia",
+        "https://tvri.go.id/"
+      ],
+      [
+        "LPP RRI",
+        "Radio Republik Indonesia",
+        "https://rri.co.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Perdagangan & Industri",
+    "icon": "🛒",
+    "desc": "Perdagangan, industri, standardisasi, persaingan usaha dan data perdagangan.",
+    "items": [
+      [
+        "Kementerian Perdagangan RI",
+        "Portal resmi Kementerian Perdagangan",
+        "https://www.kemendag.go.id/"
+      ],
+      [
+        "Kementerian Perindustrian RI",
+        "Portal resmi Kementerian Perindustrian",
+        "https://www.kemenperin.go.id/"
+      ],
+      [
+        "Satu Data Perdagangan",
+        "Data perdagangan dalam dan luar negeri",
+        "https://satudata.kemendag.go.id/"
+      ],
+      [
+        "Badan Standardisasi Nasional",
+        "Standardisasi dan SNI",
+        "https://www.bsn.go.id/"
+      ],
+      [
+        "KPPU",
+        "Komisi Pengawas Persaingan Usaha",
+        "https://kppu.go.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Politik dan Keamanan Negara",
+    "icon": "🏛️",
+    "desc": "Koordinasi politik, pemerintahan dalam negeri, diplomasi dan penyelenggaraan pemilu.",
+    "items": [
+      [
+        "Kementerian Koordinator Bidang Politik dan Keamanan RI",
+        "Kemenko Polkam Republik Indonesia",
+        "https://polkam.go.id/"
+      ],
+      [
+        "Kementerian Dalam Negeri RI",
+        "Pemerintahan dalam negeri dan pemerintah daerah",
+        "https://www.kemendagri.go.id/"
+      ],
+      [
+        "Kementerian Luar Negeri RI",
+        "Diplomasi dan hubungan luar negeri Republik Indonesia",
+        "https://kemlu.go.id/"
+      ],
+      [
+        "Kementerian Sekretariat Negara RI",
+        "Dukungan administrasi kepresidenan dan kenegaraan",
+        "https://www.setneg.go.id/"
+      ],
+      [
+        "KPU RI",
+        "Komisi Pemilihan Umum Republik Indonesia",
+        "https://www.kpu.go.id/"
+      ],
+      [
+        "Bawaslu RI",
+        "Badan Pengawas Pemilihan Umum",
+        "https://www.bawaslu.go.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Sosial & Pemberdayaan Masyarakat",
+    "icon": "🤝",
+    "desc": "Bantuan sosial, pemberdayaan masyarakat, jaminan sosial dan pengentasan kemiskinan.",
+    "items": [
+      [
+        "Kementerian Koordinator Bidang Pemberdayaan Masyarakat",
+        "Koordinasi kebijakan pemberdayaan masyarakat",
+        "https://www.kemenkopm.go.id/"
+      ],
+      [
+        "Kementerian Sosial RI",
+        "Portal resmi Kementerian Sosial",
+        "https://kemensos.go.id/"
+      ],
+      [
+        "Cek Bansos Kemensos",
+        "Layanan pencarian penerima bantuan sosial",
+        "https://cekbansos.kemensos.go.id/"
+      ],
+      [
+        "BPJS Ketenagakerjaan",
+        "Jaminan sosial ketenagakerjaan",
+        "https://www.bpjsketenagakerjaan.go.id/"
+      ],
+      [
+        "BPJS Kesehatan",
+        "Jaminan kesehatan masyarakat",
+        "https://www.bpjs-kesehatan.go.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Statistik & Data",
+    "icon": "📊",
+    "desc": "Statistik nasional, data terbuka pemerintah dan informasi geospasial.",
+    "items": [
+      [
+        "Badan Pusat Statistik",
+        "Portal resmi BPS Republik Indonesia",
+        "https://www.bps.go.id/"
+      ],
+      [
+        "Satu Data Indonesia",
+        "Portal data terbuka pemerintah Indonesia",
+        "https://data.go.id/"
+      ],
+      [
+        "Badan Informasi Geospasial",
+        "Informasi dan data geospasial nasional",
+        "https://www.big.go.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Agama",
+    "icon": "🕌",
+    "desc": "Pelayanan keagamaan, haji, nikah, madrasah dan kerukunan umat beragama.",
+    "items": [
+      [
+        "Kementerian Agama RI",
+        "Portal resmi Kementerian Agama Republik Indonesia",
+        "https://kemenag.go.id/"
+      ],
+      [
+        "Layanan Kementerian Agama",
+        "Portal aplikasi layanan publik Kementerian Agama",
+        "https://kemenag.go.id/layanan"
+      ]
+    ]
+  },
+  {
+    "name": "Hukum, HAM & Peradilan",
+    "icon": "⚖️",
+    "desc": "Hukum, hak asasi manusia, imigrasi, pemasyarakatan, peradilan dan pemberantasan korupsi.",
+    "items": [
+      [
+        "Kemenko Hukum, HAM, Imigrasi dan Pemasyarakatan",
+        "Koordinasi bidang hukum, HAM, imigrasi dan pemasyarakatan",
+        "https://kumham-imipas.go.id/"
+      ],
+      [
+        "Kementerian Hukum RI",
+        "Portal resmi Kementerian Hukum",
+        "https://kemenkum.go.id/"
+      ],
+      [
+        "Kementerian HAM RI",
+        "Portal resmi Kementerian Hak Asasi Manusia",
+        "https://www.kemenham.go.id/"
+      ],
+      [
+        "Kementerian Imigrasi dan Pemasyarakatan",
+        "Portal resmi Kemenimipas",
+        "https://kemenimipas.go.id/"
+      ],
+      [
+        "Kejaksaan RI",
+        "Kejaksaan Republik Indonesia",
+        "https://www.kejaksaan.go.id/"
+      ],
+      [
+        "Mahkamah Agung RI",
+        "Lembaga peradilan tertinggi",
+        "https://www.mahkamahagung.go.id/"
+      ],
+      [
+        "Mahkamah Konstitusi RI",
+        "Peradilan konstitusi Republik Indonesia",
+        "https://www.mkri.id/"
+      ],
+      [
+        "KPK",
+        "Komisi Pemberantasan Korupsi",
+        "https://www.kpk.go.id/"
+      ],
+      [
+        "Komnas HAM",
+        "Komisi Nasional Hak Asasi Manusia",
+        "https://www.komnasham.go.id/"
+      ],
+      [
+        "LPSK",
+        "Lembaga Perlindungan Saksi dan Korban",
+        "https://www.lpsk.go.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Ketenagakerjaan & Pekerja Migran",
+    "icon": "👷",
+    "desc": "Ketenagakerjaan, pelindungan pekerja migran dan jaminan sosial pekerja.",
+    "items": [
+      [
+        "Kementerian Ketenagakerjaan RI",
+        "Portal resmi Kementerian Ketenagakerjaan",
+        "https://kemnaker.go.id/"
+      ],
+      [
+        "KP2MI/BP2MI",
+        "Kementerian/Badan Pelindungan Pekerja Migran Indonesia",
+        "https://kp2mi.go.id/"
+      ],
+      [
+        "BPJS Ketenagakerjaan",
+        "Jaminan sosial bagi pekerja",
+        "https://www.bpjsketenagakerjaan.go.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Infrastruktur, Perumahan & Pertanahan",
+    "icon": "🏗️",
+    "desc": "Infrastruktur, pekerjaan umum, perumahan, tata ruang dan pertanahan.",
+    "items": [
+      [
+        "Kemenko Infrastruktur dan Pembangunan Kewilayahan",
+        "Koordinasi pembangunan infrastruktur dan wilayah",
+        "https://kemenkoinfra.go.id/"
+      ],
+      [
+        "Kementerian Pekerjaan Umum RI",
+        "Infrastruktur pekerjaan umum nasional",
+        "https://pu.go.id/"
+      ],
+      [
+        "Kementerian Perumahan dan Kawasan Permukiman",
+        "Perumahan dan kawasan permukiman",
+        "https://pkp.go.id/"
+      ],
+      [
+        "Kementerian ATR/BPN",
+        "Agraria, tata ruang dan pertanahan",
+        "https://www.atrbpn.go.id/"
+      ],
+      [
+        "Badan Informasi Geospasial",
+        "Informasi geospasial untuk tata ruang dan pembangunan",
+        "https://www.big.go.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Transportasi",
+    "icon": "🚆",
+    "desc": "Transportasi darat, laut, udara, perkeretaapian dan konektivitas nasional.",
+    "items": [
+      [
+        "Kementerian Perhubungan RI",
+        "Portal resmi Kementerian Perhubungan",
+        "https://dephub.go.id/"
+      ],
+      [
+        "Portal Layanan Kemenhub",
+        "Aplikasi dan layanan online sektor transportasi",
+        "https://dephub.go.id/portal-kemenhub/index.php"
+      ]
+    ]
+  },
+  {
+    "name": "Energi & Sumber Daya Mineral",
+    "icon": "⚡",
+    "desc": "Energi, listrik, minyak dan gas, mineral serta sumber daya geologi.",
+    "items": [
+      [
+        "Kementerian ESDM RI",
+        "Portal resmi Kementerian Energi dan Sumber Daya Mineral",
+        "https://www.esdm.go.id/"
+      ],
+      [
+        "BPH Migas",
+        "Badan Pengatur Hilir Minyak dan Gas Bumi",
+        "https://www.bphmigas.go.id/"
+      ],
+      [
+        "SKK Migas",
+        "Pengelolaan kegiatan usaha hulu minyak dan gas bumi",
+        "https://www.skkmigas.go.id/"
+      ],
+      [
+        "PLN",
+        "Layanan ketenagalistrikan nasional",
+        "https://web.pln.co.id/"
+      ],
+      [
+        "MAGMA Indonesia",
+        "Informasi kebencanaan geologi PVMBG",
+        "https://magma.esdm.go.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Lingkungan Hidup & Kehutanan",
+    "icon": "🌳",
+    "desc": "Pengendalian lingkungan, perubahan iklim, kehutanan dan konservasi alam.",
+    "items": [
+      [
+        "Kementerian Lingkungan Hidup/BPLH",
+        "Portal resmi KLH/Badan Pengendalian Lingkungan Hidup",
+        "https://kemenlh.go.id/"
+      ],
+      [
+        "Kementerian Kehutanan RI",
+        "Portal resmi Kementerian Kehutanan",
+        "https://www.kehutanan.go.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Desa & Transmigrasi",
+    "icon": "🏘️",
+    "desc": "Pembangunan desa, daerah tertinggal dan pengembangan kawasan transmigrasi.",
+    "items": [
+      [
+        "Kementerian Desa dan Pembangunan Daerah Tertinggal",
+        "Portal resmi Kemendes PDT",
+        "https://www.kemendesa.go.id/"
+      ],
+      [
+        "Kementerian Transmigrasi RI",
+        "Portal resmi Kementerian Transmigrasi",
+        "https://www.transmigrasi.go.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Ekonomi, Investasi, Koperasi & UMKM",
+    "icon": "📈",
+    "desc": "Koordinasi ekonomi, BUMN, investasi, perizinan, koperasi dan UMKM.",
+    "items": [
+      [
+        "Kementerian Koordinator Bidang Perekonomian",
+        "Koordinasi kebijakan perekonomian nasional",
+        "https://ekon.go.id/"
+      ],
+      [
+        "Kementerian BUMN RI",
+        "Portal Badan Usaha Milik Negara",
+        "https://www.bumn.go.id/"
+      ],
+      [
+        "Kementerian Investasi dan Hilirisasi/BKPM",
+        "Investasi, hilirisasi dan penanaman modal",
+        "https://www.bkpm.go.id/"
+      ],
+      [
+        "OSS Indonesia",
+        "Perizinan berusaha berbasis risiko",
+        "https://oss.go.id/"
+      ],
+      [
+        "Kementerian Koperasi RI",
+        "Portal resmi Kementerian Koperasi",
+        "https://kemenkop.go.id/"
+      ],
+      [
+        "Kementerian UMKM RI",
+        "Portal resmi Kementerian Usaha Mikro, Kecil, dan Menengah",
+        "https://umkm.go.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Pariwisata & Ekonomi Kreatif",
+    "icon": "🏝️",
+    "desc": "Pariwisata nasional, destinasi dan pengembangan ekonomi kreatif.",
+    "items": [
+      [
+        "Kementerian Pariwisata RI",
+        "Portal resmi Kementerian Pariwisata",
+        "https://kemenpar.go.id/"
+      ],
+      [
+        "Kementerian Ekonomi Kreatif/Badan Ekonomi Kreatif",
+        "Portal resmi Kemenekraf/Bekraf",
+        "https://ekraf.go.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Pemuda, Olahraga, Perempuan & Anak",
+    "icon": "🏅",
+    "desc": "Kepemudaan, olahraga, pemberdayaan perempuan dan perlindungan anak.",
+    "items": [
+      [
+        "Kementerian Pemuda dan Olahraga RI",
+        "Portal resmi Kemenpora",
+        "https://www.kemenpora.go.id/"
+      ],
+      [
+        "Kementerian PPPA RI",
+        "Pemberdayaan perempuan dan perlindungan anak",
+        "https://www.kemenpppa.go.id/"
+      ]
+    ]
+  },
+  {
+    "name": "Perencanaan & Aparatur Negara",
+    "icon": "🗂️",
+    "desc": "Perencanaan pembangunan, reformasi birokrasi, ASN, arsip dan pengadaan pemerintah.",
+    "items": [
+      [
+        "Kementerian PPN/Bappenas",
+        "Perencanaan pembangunan nasional",
+        "https://www.bappenas.go.id/"
+      ],
+      [
+        "Kementerian PANRB",
+        "Pendayagunaan aparatur negara dan reformasi birokrasi",
+        "https://www.menpan.go.id/"
+      ],
+      [
+        "Badan Kepegawaian Negara",
+        "Manajemen aparatur sipil negara",
+        "https://www.bkn.go.id/"
+      ],
+      [
+        "Lembaga Administrasi Negara",
+        "Pengembangan kompetensi dan administrasi negara",
+        "https://lan.go.id/"
+      ],
+      [
+        "Arsip Nasional Republik Indonesia",
+        "Kearsipan nasional",
+        "https://www.anri.go.id/"
+      ],
+      [
+        "LKPP",
+        "Lembaga Kebijakan Pengadaan Barang/Jasa Pemerintah",
+        "https://www.lkpp.go.id/"
+      ],
+      [
+        "Ombudsman RI",
+        "Pengawasan pelayanan publik",
+        "https://ombudsman.go.id/"
+      ]
+    ]
+  }
 ];
 
 const grid = document.getElementById('grid');
