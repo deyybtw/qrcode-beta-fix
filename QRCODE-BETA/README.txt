@@ -1,28 +1,26 @@
-LAYANAN PUBLIK TVRI — RUNNING TEXT PIHPS BANK INDONESIA
+FIX API 404 - VERCEL
 
-Sumber harga:
-https://www.bi.go.id/hargapangan
+PENTING: semua file/folder berikut harus berada langsung di ROOT repository GitHub:
 
-Dataset yang digunakan:
-- PIHPS Nasional
-- Pasar Tradisional
-- Lingkup Nasional
-- Harga terbaru dan perubahan dibanding titik data sebelumnya
+index.html
+package.json
+vercel.json
+api/
+  ping.js
+  prices.js
 
-Cara deploy ke Vercel:
-1. Upload seluruh isi folder ini ke ROOT repository GitHub.
-2. Pastikan struktur repository:
-   index.html
-   package.json
-   vercel.json
-   api/prices.js
-3. Push ke branch yang terhubung ke Vercel.
-4. Vercel akan deploy otomatis.
-5. Uji endpoint: https://DOMAIN-ANDA.vercel.app/api/prices
-6. Jika JSON menampilkan ok:true, running text akan mengambil data otomatis.
+JANGAN taruh di dalam subfolder qrcode-beta-fix-bi-404-fixed/ pada repository.
 
-Frontend mengecek data baru setiap 1 jam.
-Vercel Function memakai cache 30 menit untuk mengurangi request ke situs sumber.
+Vercel Settings:
+- Framework Preset: Other
+- Root Directory: kosong / repository root (./)
+- Build Command: kosong
+- Output Directory: kosong
 
-Catatan:
-PIHPS Bank Indonesia memperbarui data harga pangan pada hari kerja. Bila data pada hari ini belum tersedia, endpoint menggunakan titik data terbaru yang sudah dipublikasikan PIHPS.
+Setelah push/redeploy, tes berurutan:
+1. https://DOMAIN-ANDA.vercel.app/api/ping
+   Harus menghasilkan JSON ok:true.
+2. https://DOMAIN-ANDA.vercel.app/api/prices
+   Jika ping berhasil tetapi prices error 503, routing sudah benar dan masalah berikutnya ada di upstream PIHPS.
+
+Jika /api/ping masih 404, berarti folder api tidak berada di Root Directory yang dideploy atau Vercel Root Directory masih menunjuk ke subfolder lain.
