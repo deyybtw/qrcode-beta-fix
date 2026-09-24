@@ -1,28 +1,19 @@
-LAYANAN PUBLIK TVRI - HARGA PANGAN OTOMATIS
+FIX VERCEL DEPLOY
 
-Isi project:
-- index.html        : website utama
-- api/prices.js     : Vercel Serverless Function untuk mengambil harga terbaru BI PIHPS
-- vercel.json       : konfigurasi function
+Struktur repository GitHub HARUS:
 
-CARA DEPLOY KE VERCEL:
-1. Upload SELURUH FOLDER project ini ke Vercel, bukan index.html saja.
-2. Deploy seperti biasa.
-3. Setelah live, buka /api/prices untuk mengecek feed JSON.
-4. Halaman utama akan mengambil /api/prices otomatis dan refresh setiap 1 jam.
+index.html
+package.json
+vercel.json
+api/
+  prices.js
 
-Sumber harga otomatis:
-Bank Indonesia PIHPS (Pasar Tradisional, nasional).
+Penting:
+1. Jangan taruh semua file di subfolder tambahan jika Vercel Root Directory masih root repository.
+2. File api/prices.js sekarang memakai format Vercel Function modern (ES module + default fetch handler).
+3. vercel.json tidak lagi memakai pola functions, jadi error unmatched-function-pattern tidak muncul.
+4. package.json memakai Node.js 22.
+5. Setelah push ke GitHub, Vercel akan redeploy otomatis.
+6. Cek https://DOMAIN-ANDA.vercel.app/api/prices setelah deploy.
 
-Komoditas live yang ditampilkan:
-- Beras Medium I
-- Gula Pasir Lokal
-- Minyak Goreng Curah
-- Daging Sapi Kualitas 1
-- Daging Ayam Ras Segar
-- Telur Ayam Ras Segar
-- Bawang Merah
-- Bawang Putih
-
-Catatan:
-Mentega, susu, LPG, minyak tanah, dan garam beryodium tidak seluruhnya tersedia pada feed harian nasional PIHPS, sehingga ticker menampilkan catatan ketersediaan/variasi wilayah untuk komoditas tersebut dan tidak mengarang angka harga.
+Jika Root Directory Vercel pernah diubah, buka Project > Settings > Build and Deployment > Root Directory dan set ke ./ (repository root), kecuali file-file di atas memang berada di subfolder tertentu.
