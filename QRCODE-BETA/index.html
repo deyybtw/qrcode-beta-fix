@@ -187,8 +187,8 @@
   <div class="price-ticker-label">INFO HARGA KEBUTUHAN POKOK</div>
   <div class="price-ticker-window">
     <div class="price-ticker-track" id="priceTickerTrack">
-      <span id="priceTickerText"><b>MEMUAT HARGA TERBARU...</b> • Mengambil data harga pangan nasional dari BI PIHPS.</span>
-      <span id="priceTickerTextClone" aria-hidden="true"><b>MEMUAT HARGA TERBARU...</b> • Mengambil data harga pangan nasional dari BI PIHPS.</span>
+      <span id="priceTickerText"><b>MEMUAT HARGA TERBARU...</b> • Mengambil harga pangan nasional terbaru dari PIHPS Bank Indonesia.</span>
+      <span id="priceTickerTextClone" aria-hidden="true"><b>MEMUAT HARGA TERBARU...</b> • Mengambil harga pangan nasional terbaru dari PIHPS Bank Indonesia.</span>
     </div>
   </div>
 </div>
@@ -1018,8 +1018,8 @@ document.getElementById('search').addEventListener('input',e=>{
 });
 
 
-// ===== Harga pangan otomatis: BI PIHPS =====
-const PRICE_REFRESH_MS = 60 * 60 * 1000; // refresh setiap 1 jam
+// ===== Harga pangan otomatis: PIHPS Nasional — Bank Indonesia =====
+const PRICE_REFRESH_MS = 60 * 60 * 1000; // cek pembaruan setiap 1 jam
 const priceTickerText = document.getElementById('priceTickerText');
 const priceTickerTextClone = document.getElementById('priceTickerTextClone');
 
@@ -1028,17 +1028,27 @@ function formatRupiah(value){
   return 'Rp ' + Math.round(Number(value)).toLocaleString('id-ID');
 }
 
-function formatTanggalHarga(iso){
-  if(!iso) return '';
-  const d = new Date(iso + 'T00:00:00+07:00');
-  if(Number.isNaN(d.getTime())) return iso;
+function formatTanggalHarga(value){
+  if(!value) return '';
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(value)) return String(value);
+  const d = new Date(value + 'T00:00:00+07:00');
+  if(Number.isNaN(d.getTime())) return value;
   return new Intl.DateTimeFormat('id-ID', {day:'2-digit', month:'short', year:'numeric', timeZone:'Asia/Jakarta'}).format(d);
+}
+
+function formatChange(change){
+  if(change === null || change === undefined || change === '') return '';
+  const raw = String(change).replace('%','').replace(',','.').trim();
+  const n = Number(raw);
+  if(Number.isNaN(n)) return ` (${change})`;
+  if(n > 0) return ` <span style="color:#b42318">▲ ${Math.abs(n).toFixed(2)}%</span>`;
+  if(n < 0) return ` <span style="color:#067647">▼ ${Math.abs(n).toFixed(2)}%</span>`;
+  return ` <span style="color:#667085">• 0.00%</span>`;
 }
 
 function setTickerHtml(html){
   priceTickerText.innerHTML = html;
   priceTickerTextClone.innerHTML = html;
-  // Restart animasi agar posisi kembali rapi setelah isi berubah.
   const track = document.getElementById('priceTickerTrack');
   track.style.animation = 'none';
   void track.offsetWidth;
@@ -1048,30 +1058,23 @@ function setTickerHtml(html){
 async function loadLatestFoodPrices(){
   try{
     const response = await fetch('/api/prices', {cache:'no-store'});
-    if(!response.ok) throw new Error('HTTP ' + response.status);
-    const payload = await response.json();
-    if(!payload.ok || !Array.isArray(payload.prices) || payload.prices.length === 0){
-      throw new Error(payload.error || 'Data harga kosong');
+    const payload = await response.json().catch(()=>({}));
+    if(!response.ok || !payload.ok || !Array.isArray(payload.prices) || payload.prices.length === 0){
+      throw new Error(payload.error || ('HTTP ' + response.status));
     }
 
-    const parts = payload.prices.map(item =>
-      `<b>${item.label.toUpperCase()}</b> ${formatRupiah(item.price)}/${item.unit}`
-    );
+    const parts = payload.prices.map(item => {
+      const price = item.price == null ? 'Belum tersedia' : `${formatRupiah(item.price)}/${item.unit}`;
+      return `<b>${item.label.toUpperCase()}</b> ${price}${formatChange(item.change)}`;
+    });
 
     const asOf = formatTanggalHarga(payload.asOf);
-    const notes = [
-      '<b>MENTEGA</b> data harian nasional belum tersedia di PIHPS',
-      '<b>SUSU</b> data harian nasional belum tersedia di PIHPS',
-      '<b>GAS LPG</b> harga mengikuti jenis dan HET wilayah',
-      '<b>MINYAK TANAH</b> harga mengikuti wilayah',
-      '<b>GARAM BERYODIUM</b> data harian nasional belum tersedia di PIHPS'
-    ];
-
-    const html = `${asOf ? `<b>UPDATE ${asOf.toUpperCase()}</b> • ` : ''}${parts.join(' • ')} • ${notes.join(' • ')} • <b>SUMBER: BANK INDONESIA PIHPS — PASAR TRADISIONAL NASIONAL</b>`;
+    const market = payload.market ? ` • ${String(payload.market).toUpperCase()}` : '';
+    const html = `${asOf ? `<b>PIHPS NASIONAL • UPDATE ${asOf.toUpperCase()}</b>${market} • ` : `<b>PIHPS NASIONAL</b>${market} • `}${parts.join(' • ')} • <b>SUMBER DATA: BANK INDONESIA — PIHPS NASIONAL</b>`;
     setTickerHtml(html);
   }catch(err){
-    console.error('Gagal mengambil harga pangan:', err);
-    setTickerHtml('<b>HARGA PANGAN</b> • Data otomatis sedang tidak tersedia. Silakan cek BI PIHPS untuk harga terbaru • BERAS • GULA PASIR • MINYAK GORENG • DAGING SAPI • DAGING AYAM • TELUR AYAM • BAWANG MERAH • BAWANG PUTIH');
+    console.error('Gagal mengambil harga PIHPS Bank Indonesia:', err);
+    setTickerHtml('<b>PIHPS NASIONAL — BANK INDONESIA</b> • Data otomatis sedang tidak tersedia. Sistem akan mencoba kembali secara otomatis setiap 1 jam.');
   }
 }
 

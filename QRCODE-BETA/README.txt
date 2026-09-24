@@ -1,19 +1,28 @@
-FIX VERCEL DEPLOY
+LAYANAN PUBLIK TVRI — RUNNING TEXT PIHPS BANK INDONESIA
 
-Struktur repository GitHub HARUS:
+Sumber harga:
+https://www.bi.go.id/hargapangan
 
-index.html
-package.json
-vercel.json
-api/
-  prices.js
+Dataset yang digunakan:
+- PIHPS Nasional
+- Pasar Tradisional
+- Lingkup Nasional
+- Harga terbaru dan perubahan dibanding titik data sebelumnya
 
-Penting:
-1. Jangan taruh semua file di subfolder tambahan jika Vercel Root Directory masih root repository.
-2. File api/prices.js sekarang memakai format Vercel Function modern (ES module + default fetch handler).
-3. vercel.json tidak lagi memakai pola functions, jadi error unmatched-function-pattern tidak muncul.
-4. package.json memakai Node.js 22.
-5. Setelah push ke GitHub, Vercel akan redeploy otomatis.
-6. Cek https://DOMAIN-ANDA.vercel.app/api/prices setelah deploy.
+Cara deploy ke Vercel:
+1. Upload seluruh isi folder ini ke ROOT repository GitHub.
+2. Pastikan struktur repository:
+   index.html
+   package.json
+   vercel.json
+   api/prices.js
+3. Push ke branch yang terhubung ke Vercel.
+4. Vercel akan deploy otomatis.
+5. Uji endpoint: https://DOMAIN-ANDA.vercel.app/api/prices
+6. Jika JSON menampilkan ok:true, running text akan mengambil data otomatis.
 
-Jika Root Directory Vercel pernah diubah, buka Project > Settings > Build and Deployment > Root Directory dan set ke ./ (repository root), kecuali file-file di atas memang berada di subfolder tertentu.
+Frontend mengecek data baru setiap 1 jam.
+Vercel Function memakai cache 30 menit untuk mengurangi request ke situs sumber.
+
+Catatan:
+PIHPS Bank Indonesia memperbarui data harga pangan pada hari kerja. Bila data pada hari ini belum tersedia, endpoint menggunakan titik data terbaru yang sudah dipublikasikan PIHPS.
