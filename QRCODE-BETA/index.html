@@ -99,6 +99,48 @@
     .brand{gap:10px}
   }
   @media(max-width:380px){.grid{grid-template-columns:1fr}}
+
+
+  /* Running text harga kebutuhan pokok */
+  body{padding-bottom:54px}
+  .price-ticker{
+    position:fixed;left:0;right:0;bottom:0;height:54px;z-index:50;
+    display:flex;align-items:stretch;background:#ffffff;
+    border-top:1px solid #d7e4ef;box-shadow:0 -8px 26px rgba(9,59,104,.10);
+    overflow:hidden;
+  }
+  .price-ticker-label{
+    flex:0 0 auto;display:flex;align-items:center;padding:0 20px;
+    background:var(--tvri-blue);color:#fff;font-size:12px;font-weight:800;
+    letter-spacing:.7px;white-space:nowrap;position:relative;z-index:2;
+  }
+  .price-ticker-window{
+    flex:1;min-width:0;overflow:hidden;display:flex;align-items:center;
+    background:linear-gradient(90deg,#f8fbff,#ffffff);
+  }
+  .price-ticker-track{
+    display:flex;width:max-content;will-change:transform;
+    animation:priceTicker 38s linear infinite;
+  }
+  .price-ticker-track span{
+    white-space:nowrap;padding-right:55px;color:#263b50;font-size:14px;font-weight:700;
+  }
+  .price-ticker-track b{color:var(--tvri-blue)}
+  .price-ticker:hover .price-ticker-track{animation-play-state:paused}
+  @keyframes priceTicker{
+    from{transform:translateX(0)}
+    to{transform:translateX(-50%)}
+  }
+  @media(max-width:650px){
+    body{padding-bottom:48px}
+    .price-ticker{height:48px}
+    .price-ticker-label{padding:0 12px;font-size:10px;max-width:112px;white-space:normal;line-height:1.15}
+    .price-ticker-track span{font-size:12px;padding-right:38px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .price-ticker-track{animation-duration:70s}
+  }
+
 </style>
 </head>
 <body>
@@ -137,6 +179,17 @@
       <button class="close" id="closeBtn">×</button>
     </div>
     <div class="services" id="services"></div>
+  </div>
+</div>
+
+
+<div class="price-ticker" role="region" aria-label="Informasi harga kebutuhan pokok">
+  <div class="price-ticker-label">INFO HARGA KEBUTUHAN POKOK</div>
+  <div class="price-ticker-window">
+    <div class="price-ticker-track" id="priceTickerTrack">
+      <span id="priceTickerText"><b>MEMUAT HARGA TERBARU...</b> • Mengambil data harga pangan nasional dari BI PIHPS.</span>
+      <span id="priceTickerTextClone" aria-hidden="true"><b>MEMUAT HARGA TERBARU...</b> • Mengambil data harga pangan nasional dari BI PIHPS.</span>
+    </div>
   </div>
 </div>
 
@@ -963,6 +1016,67 @@ document.getElementById('search').addEventListener('input',e=>{
     cat.items.some(item=>item[0].toLowerCase().includes(q) || item[1].toLowerCase().includes(q))
   ));
 });
+
+
+// ===== Harga pangan otomatis: BI PIHPS =====
+const PRICE_REFRESH_MS = 60 * 60 * 1000; // refresh setiap 1 jam
+const priceTickerText = document.getElementById('priceTickerText');
+const priceTickerTextClone = document.getElementById('priceTickerTextClone');
+
+function formatRupiah(value){
+  if(value === null || value === undefined || Number.isNaN(Number(value))) return '—';
+  return 'Rp ' + Math.round(Number(value)).toLocaleString('id-ID');
+}
+
+function formatTanggalHarga(iso){
+  if(!iso) return '';
+  const d = new Date(iso + 'T00:00:00+07:00');
+  if(Number.isNaN(d.getTime())) return iso;
+  return new Intl.DateTimeFormat('id-ID', {day:'2-digit', month:'short', year:'numeric', timeZone:'Asia/Jakarta'}).format(d);
+}
+
+function setTickerHtml(html){
+  priceTickerText.innerHTML = html;
+  priceTickerTextClone.innerHTML = html;
+  // Restart animasi agar posisi kembali rapi setelah isi berubah.
+  const track = document.getElementById('priceTickerTrack');
+  track.style.animation = 'none';
+  void track.offsetWidth;
+  track.style.animation = '';
+}
+
+async function loadLatestFoodPrices(){
+  try{
+    const response = await fetch('/api/prices', {cache:'no-store'});
+    if(!response.ok) throw new Error('HTTP ' + response.status);
+    const payload = await response.json();
+    if(!payload.ok || !Array.isArray(payload.prices) || payload.prices.length === 0){
+      throw new Error(payload.error || 'Data harga kosong');
+    }
+
+    const parts = payload.prices.map(item =>
+      `<b>${item.label.toUpperCase()}</b> ${formatRupiah(item.price)}/${item.unit}`
+    );
+
+    const asOf = formatTanggalHarga(payload.asOf);
+    const notes = [
+      '<b>MENTEGA</b> data harian nasional belum tersedia di PIHPS',
+      '<b>SUSU</b> data harian nasional belum tersedia di PIHPS',
+      '<b>GAS LPG</b> harga mengikuti jenis dan HET wilayah',
+      '<b>MINYAK TANAH</b> harga mengikuti wilayah',
+      '<b>GARAM BERYODIUM</b> data harian nasional belum tersedia di PIHPS'
+    ];
+
+    const html = `${asOf ? `<b>UPDATE ${asOf.toUpperCase()}</b> • ` : ''}${parts.join(' • ')} • ${notes.join(' • ')} • <b>SUMBER: BANK INDONESIA PIHPS — PASAR TRADISIONAL NASIONAL</b>`;
+    setTickerHtml(html);
+  }catch(err){
+    console.error('Gagal mengambil harga pangan:', err);
+    setTickerHtml('<b>HARGA PANGAN</b> • Data otomatis sedang tidak tersedia. Silakan cek BI PIHPS untuk harga terbaru • BERAS • GULA PASIR • MINYAK GORENG • DAGING SAPI • DAGING AYAM • TELUR AYAM • BAWANG MERAH • BAWANG PUTIH');
+  }
+}
+
+loadLatestFoodPrices();
+setInterval(loadLatestFoodPrices, PRICE_REFRESH_MS);
 render(categories);
 </script>
 </body>
