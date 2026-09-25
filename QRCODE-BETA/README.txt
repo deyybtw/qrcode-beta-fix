@@ -24,3 +24,13 @@ Setelah push/redeploy, tes berurutan:
    Jika ping berhasil tetapi prices error 503, routing sudah benar dan masalah berikutnya ada di upstream PIHPS.
 
 Jika /api/ping masih 404, berarti folder api tidak berada di Root Directory yang dideploy atau Vercel Root Directory masih menunjuk ke subfolder lain.
+
+
+LOGO SUBMENU:
+Logo instansi dicari otomatis dari domain resmi (/favicon.ico, favicon.png, apple-touch-icon), lalu fallback ke Google dan DuckDuckGo favicon. Beberapa subdomain memakai logo domain induk kementerian/lembaga.
+
+
+LOGO SUBMENU
+- /api/logo mencari logo dari situs resmi instansi secara server-side.
+- Tidak perlu upload logo kementerian satu per satu.
+- Jika situs tidak menyediakan aset logo yang dapat diambil, fallback berupa inisial instansi tetap ditampilkan.
